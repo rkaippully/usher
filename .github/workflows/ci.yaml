@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Nix - ghc-${{ matrix.ghc }} os-${{ matrix.os }}
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+        ghc:
+          - 9.2.4
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v17
+
+      - name: Set up Cachix
+        uses: cachix/cachix-action@v10
+        with:
+          name: rkaippully
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      - name: Build Packages
+        run: |
+          GHC_VERSION=$(echo ${{ matrix.ghc }} | tr -d .)
+          nix build -L --no-link

@@ -1,0 +1,61 @@
+cabal-version:       2.4
+name:                usher
+version:             0.1.0
+description:         Please see the README at <https://github.com/rkaippully/usher#readme>
+homepage:            https://github.com/rkaippully/usher#readme
+bug-reports:         https://github.com/rkaippully/usher/issues
+author:              Raghu Kaippully
+maintainer:          rkaippully@gmail.com
+copyright:           2022 Raghu Kaippully
+license:             MPL-2.0
+license-file:        LICENSE
+build-type:          Simple
+extra-source-files:  README.md
+
+
+source-repository head
+  type:      git
+  location:  https://github.com/rkaippully/usher
+
+common shared
+  default-language:   Haskell2010
+  ghc-options:        -Wall
+                      -Wcompat
+                      -Werror
+                      -Widentities
+                      -Wincomplete-record-updates
+                      -Wincomplete-uni-patterns
+                      -Wmissing-deriving-strategies
+                      -Wmissing-fields
+                      -Wmissing-home-modules
+                      -Wno-unticked-promoted-constructors
+                      -Wpartial-fields
+                      -Wredundant-constraints
+                      -Wunused-packages
+                      -fshow-warning-groups
+  default-extensions: Arrows
+                      DataKinds
+                      ImportQualifiedPost
+                      NoImplicitPrelude
+                      OverloadedStrings
+                      QuasiQuotes
+
+library
+  import:             shared
+  build-depends:      http-types ==0.12.3
+                    , relude ==1.1.0.0
+                    , warp ==3.3.21
+                    , webgear-server ==1.0.4
+  hs-source-dirs:     src
+  exposed-modules:    Usher.Server
+
+executable usher
+  import:             shared
+  build-depends:      relude ==1.1.0.0
+                    , usher
+  ghc-options:        -O2
+                      -rtsopts
+                      -threaded
+                      -with-rtsopts=-N
+  main-is:            Main.hs
+  hs-source-dirs:     app
